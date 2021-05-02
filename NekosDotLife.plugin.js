@@ -5,6 +5,7 @@
  * @version 0.0.1
  * @invite R7vuNSv
  * @authorid 328191996579545088
+ * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js?token=AIYJQ6DQIXNNS2RYYHBBWT3AR4LFC
  * @website https://github.com/CriosChan/
  * @source https://github.com/CriosChan/NekosDotLifeBD
  */
