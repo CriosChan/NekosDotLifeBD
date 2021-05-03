@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 0.1.0
+ * @version 0.1.2
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js?token=AIYJQ6DQIXNNS2RYYHBBWT3AR4LFC
@@ -78,7 +78,7 @@ module.exports = (() => {
         }
 
         createbuttons(text, form){
-            const buttonhtml = `<div class="buttonContainer-28fw2U da-buttonContainer nekosSub" style='float:left;'>
+            const buttonhtml = `<div class="buttonContainer-28fw2U da-buttonContainer nekosSub" style='display:inline-block;'>
                         <button aria-label="HugButtonHTML" tabindex="0" type="button" class="buttonWrapper-1ZmCpA da-buttonWrapper button-38aScr da-button lookBlank-3eh9lL colorBrand-3pXr91 grow-q77ONN da-grow noFocus-2C7BQj da-noFocus">
                             <div class="contents-18-Yxp da-contents button-3AYNKb da-button button-318s1X da-button">
                                 ${text}
@@ -174,6 +174,115 @@ module.exports = (() => {
                 })
                 this.createbuttons('WAIFU', form).addEventListener("click", () => {
                     this.send(nekourl + 'v2/img/waifu', 'url')
+                })
+
+                const nsfwhtml = `<div class="markup-2BOw-j messageContent-2qWWxC nekosSub" style='display:block'>  NSFW</div>`;
+                const nsfw = DOMTools.createElement(nsfwhtml);
+                form.querySelector(DiscordSelectors.Textarea.channelTextArea).append(nsfw);
+
+                this.createbuttons('RANDOMHENTAIGIF', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/Random_hentai_gif', 'url')
+                })
+
+                this.createbuttons('PUSSY', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/pussy', 'url')
+                })
+
+                this.createbuttons('LESBIAN', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/les', 'url')
+                })
+
+                this.createbuttons('KUNI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/kuni', 'url')
+                })
+
+                this.createbuttons('CUMSLUTS', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/cum', 'url')
+                })
+                
+                this.createbuttons('CLASSIC', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/classic', 'url')
+                })
+
+                this.createbuttons('BOOBS', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/boobs', 'url')
+                })
+
+                this.createbuttons('BJ', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/bj', 'url')
+                })
+
+                this.createbuttons('ANAL', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/anal', 'url')
+                })
+                this.createbuttons('YURI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/yuri', 'url')
+                })
+                this.createbuttons('TRAP', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/trap', 'url')
+                })
+                this.createbuttons('TITS', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/tits', 'url')
+                })
+                this.createbuttons('GIRLSOLOGIF', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/solog', 'url')
+                })
+                this.createbuttons('GIRLSOLO', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/solo', 'url')
+                })
+                this.createbuttons('PUSSYWANKGIF', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/pwankg', 'url')
+                })
+                this.createbuttons('PUSSYART', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/pussy_jpg', 'url')
+                })
+                this.createbuttons('KETA', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/keta', 'url')
+                })
+                this.createbuttons('HOLOERO', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/holoero', 'url')
+                })
+                this.createbuttons('HENTAI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/hentai', 'url')
+                })
+                this.createbuttons('FUTANARI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/futanari', 'url')
+                })
+                this.createbuttons('FEMDOM', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/femdom', 'url')
+                })
+                this.createbuttons('FEETGIF', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/feetg', 'url')
+                })
+                this.createbuttons('FEET', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/feet', 'url')
+                })
+                this.createbuttons('EROFEET', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/erofeet', 'url')
+                })
+                this.createbuttons('ERO', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/ero', 'url')
+                })
+                this.createbuttons('EROKITSUNE', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/erok', 'url')
+                })
+                this.createbuttons('EROKEMONOMIMI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/erokemo', 'url')
+                })
+                this.createbuttons('EROYURI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/eroyuri', 'url')
+                })
+                this.createbuttons('CUMARTS', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/cum_jpg', 'url')
+                })
+                this.createbuttons('BLOWJOB', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/blowjob', 'url')
+                })
+                this.createbuttons('SPANK', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/spank', 'url')
+                })
+                this.createbuttons('GASM', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/gasm', 'url')
                 })
             })
         }
