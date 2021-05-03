@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 0.0.1
+ * @version 0.1.0
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js?token=AIYJQ6DQIXNNS2RYYHBBWT3AR4LFC
@@ -56,61 +56,155 @@ module.exports = (() => {
 	</button>
 </div>`;
 
-	const press = new KeyboardEvent("keydown", {key: "Enter", code: "Enter", which: 13, keyCode: 13, bubbles: true});
-    Object.defineProperties(press, {keyCode: {value: 13}, which: {value: 13}});
+    let opened = false;
+    const nekourl = 'https://www.nekos.life/api/'
 
     const {DiscordSelectors, DiscordAPI, PluginUtilities, DOMTools, Logger} = Api;
     return class NekosDotLife extends Plugin {
         onStart() {
             const form = document.querySelector("form");
-            if (form) this.addButton(form);
+            if (form) this.addButton();
         }
         
         onStop() {
             const button = document.querySelector(".nekos");
             if (button) button.remove();
+            const buttons = document.querySelectorAll(".nekosSub");
+            for(let i = 1; i <= buttons.length; i++){
+                const button = document.querySelector(".nekosSub");
+                if (button) button.remove();
+            }
             PluginUtilities.removeStyle(this.getName());
         }
 
-        addButton(form) {
+        createbuttons(text, form){
+            const buttonhtml = `<div class="buttonContainer-28fw2U da-buttonContainer nekosSub" style='float:left;'>
+                        <button aria-label="HugButtonHTML" tabindex="0" type="button" class="buttonWrapper-1ZmCpA da-buttonWrapper button-38aScr da-button lookBlank-3eh9lL colorBrand-3pXr91 grow-q77ONN da-grow noFocus-2C7BQj da-noFocus">
+                            <div class="contents-18-Yxp da-contents button-3AYNKb da-button button-318s1X da-button">
+                                ${text}
+                            </div>
+                        </button>
+                    </div>`;
+                const nekoButton = DOMTools.createElement(buttonhtml);
+				form.querySelector(DiscordSelectors.Textarea.channelTextArea).append(nekoButton);
+                return nekoButton;
+        }
+
+        addButton() {
+            const form = document.querySelector("form");
             if (form.querySelector(".nekos")) return;
             const button = DOMTools.createElement(buttonHTML);
             form.querySelector(DiscordSelectors.Textarea.buttons).append(button);
             button.addEventListener("click", () => {
-				
-				var request = new Request('https://www.nekos.life/api/neko');
-				fetch(request).then(function(response) {
-					return response.text();
-				}).then(function(text) {
-					var obj = JSON.parse(text);
-				  
-					let channelID = BdApi.findModuleByProps('getChannelId').getChannelId();
-					
-					// Create the message
-					let MessageQueue = BdApi.findModuleByProps('enqueue');
-					let MessageParser = BdApi.findModuleByProps('createBotMessage');
-					
-					let msg = MessageParser.createBotMessage(channelID, '');
-					
-					// Send the message
-					MessageQueue.enqueue({
-						type: 0,
-						message: {
-							channelId: channelID,
-							content: obj.neko,
-							tts: false,
-							nonce: msg.id,
-							}
-						}, r => {
-							return;
-						});
-					});
-				  
-				});
+				if(opened == true) {
+                    const buttons = document.querySelectorAll(".nekosSub");
+                    for(let i = 1; i <= buttons.length; i++){
+                        const button = document.querySelector(".nekosSub");
+                        if (button) button.remove();
+                    }
+                    opened = false;
+                    return;
+                }
 
-				
-				
+                opened = true
+
+                const sfwhtml = `<div class="markup-2BOw-j messageContent-2qWWxC nekosSub" >  SFW</div>`;
+                const sfw = DOMTools.createElement(sfwhtml);
+                form.querySelector(DiscordSelectors.Textarea.channelTextArea).append(sfw);
+
+                this.createbuttons('SMUG', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/smug', 'url')
+                });
+                this.createbuttons('BAKA', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/baka', 'url')
+                });
+                this.createbuttons('TICKLE', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/tickle', 'url')
+                });
+                this.createbuttons('SLAP', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/slap', 'url')
+                });
+                this.createbuttons('POKE', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/poke', 'url')
+                });
+                this.createbuttons('PAT', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/pat', 'url')
+                });
+                this.createbuttons('NEKO', form).addEventListener("click", () => {
+                    this.send(nekourl + 'neko', 'neko')
+                });
+                this.createbuttons('MEOW', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/meow', 'url')
+                });
+                this.createbuttons('KISS', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/kiss', 'url')
+                })
+                this.createbuttons('HUG', form).addEventListener("click", () => {
+                    this.send(nekourl + 'hug', 'url')
+                });
+                this.createbuttons('FOXGIRL', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/fox_girl', 'url')
+                })
+                this.createbuttons('FEED', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/feed', 'url')
+                })
+                this.createbuttons('CUDDLE', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/cuddle', 'url')
+                })
+                this.createbuttons('KEMONOMIMI', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/kemonomimi', 'url')
+                })
+                this.createbuttons('HOLO', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/holo', 'url')
+                })
+                this.createbuttons('WOOF', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/woof', 'url')
+                })
+                this.createbuttons('WALLPAPER', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/wallpaper', 'url')
+                })
+                this.createbuttons('GOOSE', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/goose', 'url')
+                })
+                this.createbuttons('GECG', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/gecg', 'url')
+                })
+                this.createbuttons('AVATAR', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/avatar', 'url')
+                })
+                this.createbuttons('WAIFU', form).addEventListener("click", () => {
+                    this.send(nekourl + 'v2/img/waifu', 'url')
+                })
+            })
         }
+
+        send(requestURL, type){
+            var request = new Request(requestURL);
+            fetch(request).then(function(response) {
+                return response.text();
+            }).then(function(text) {
+                var obj = JSON.parse(text);                
+                let channelID = BdApi.findModuleByProps('getChannelId').getChannelId();
+                let MessageQueue = BdApi.findModuleByProps('enqueue');
+                let MessageParser = BdApi.findModuleByProps('createBotMessage');
+                let msg = MessageParser.createBotMessage(channelID, '');
+                let content = ''
+                if(type == 'neko') content = obj.neko;
+                if(type == 'url') content = obj.url;
+                // Send the message
+                MessageQueue.enqueue({
+                    type: 0,
+                    message: {
+                        channelId: channelID,
+                        content: content,
+                        tts: false,
+                        nonce: msg.id,
+                        }
+                    }, r => {
+                        return;
+                    });
+                });
+            }
 
         observer(e) {
             if (!e.addedNodes.length || !e.addedNodes[0] || !e.addedNodes[0].querySelector) return;
