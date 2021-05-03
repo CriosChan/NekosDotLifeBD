@@ -22,7 +22,7 @@ module.exports = (() => {
 			version:"0.0.1",
 			description:"A plugin allowing to send any photo from nekos.life in one click",
 			github:"https://github.com/CriosChan/NekosDotLifeBD",
-			github_raw:""},
+			github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"},
 		main:"index.js"
 	};
 
