@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 0.1.3
+ * @version 0.1.5
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js?token=AIYJQ6DQIXNNS2RYYHBBWT3AR4LFC
@@ -19,10 +19,10 @@ module.exports = (() => {
 				discord_id:"328191996579545088",
 				github_username:"CriosChan",
 			}],
-			version:"0.0.1",
+			version:"0.1.5",
 			description:"A plugin allowing to send any photo from nekos.life in one click",
 			github:"https://github.com/CriosChan/NekosDotLifeBD",
-			github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"},
+			github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js?token=AIYJQ6DQIXNNS2RYYHBBWT3AR4LFC"},
 		main:"index.js"
 	};
 
@@ -196,7 +196,7 @@ module.exports = (() => {
                 return response.text();
             }).then(function(text) {
                 var obj = JSON.parse(text);                
-                let channelID = BdApi.findModuleByProps('getChannelId').getChannelId();
+                let channelID = BdApi.findModuleByProps("getLastSelectedChannelId").getChannelId();
                 let MessageQueue = BdApi.findModuleByProps('enqueue');
                 let MessageParser = BdApi.findModuleByProps('createBotMessage');
                 let msg = MessageParser.createBotMessage(channelID, '');
