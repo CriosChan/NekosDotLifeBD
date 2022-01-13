@@ -1,5 +1,5 @@
 # NekosDotLifeBD
-A plugin allowing to send any photo from nekos.life in one click
+A plugin allowing to send any photo from nekos.life in two click
 
 # Preview
 ![SC2 Video](previews/preview1.gif)
