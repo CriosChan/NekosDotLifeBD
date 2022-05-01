@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.2
+ * @version 2.0.3
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
@@ -342,7 +342,7 @@ module.exports = (() => {
 						if(type == 'url') url = obj.url;
 						downloadImage(url, os.tmpdir() + "/" + filename).then(() => {
 							try{
-								fs.readFile("D:\\Temp\\smug_002.gif", function (err, data){
+								fs.readFile(os.tmpdir() + "\\" + filename, function (err, data){
 									if(err) throw err;
 									let blob = data.toString("base64")
 									
