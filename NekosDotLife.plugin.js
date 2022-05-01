@@ -2,13 +2,45 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.1
+ * @version 2.0.2
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
  * @website https://github.com/CriosChan/
  * @source https://github.com/CriosChan/NekosDotLifeBD
  */
+
+const fs = require('fs');
+const client = require('https');
+const os = require('os');
+
+function downloadImage(url, filepath) {
+	return new Promise((resolve, reject) => {
+		client.get(url, (res) => {
+			if (res.statusCode === 200) {
+				res.pipe(fs.createWriteStream(filepath))
+					.on('error', reject)
+					.once('close', () => resolve(filepath));
+				console.log(res)
+			} else {
+				// Consume response data to free up memory
+				res.resume();
+				reject(new Error(`Request Failed With a Status Code: ${res.statusCode}`));
+
+			}
+		});
+	});
+}
+
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+}
+
 module.exports = (() => {
 
 	const config = {
@@ -19,7 +51,7 @@ module.exports = (() => {
 				discord_id:"328191996579545088",
 				github_username:"CriosChan",
 			}],
-			version:"2.0.1",
+			version:"2.0.2",
 			description:"A plugin allowing to send any photo from nekos.life in two clicks",
 			github:"https://github.com/CriosChan/NekosDotLifeBD",
 			github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
@@ -32,21 +64,36 @@ module.exports = (() => {
 				note: "Allows to activate the NSFW function of the plugin. ⚠️Some SFW can be NSFW, this will be patched soon.",
 				id: "nsfwswitch",
 				value: false
+			},
+			{
+				type: "switch",
+				name: "Spoiler for NSFW ?",
+				note: "Allows to send NSFW images as spoiler instead of normal.",
+				id: "spoiler",
+				value: false
 			}
 		],
 		changelog: [
 			{
-				title: "New UI",
+				title: "NSFW",
 				type: "improved",
 				items: [
-					"New interface much more user friendly, better organized with background images for each category",
+					"You can now ask for the NSFW to be put in spoiler!",
 				]
 			},
 			{
-				title: "NSFW",
-				type: "added",
+				title: "Upload",
+				type: "improved",
 				items: [
-					"NSFW is now disabled by default, you can re-enable it in the plugin settings!",
+					"New upload system to allow spoil system.!",
+				]
+				
+			},
+			{
+				title: "API",
+				type: "progress",
+				items: [
+					"There is unfortunately a big problem with the API of Nekos.Life for the moment which prevents some images to be published :/",
 				]
 				
 			},
@@ -201,7 +248,7 @@ module.exports = (() => {
 
 						const Tags = {
 							sfw: [
-								{url: "v2/img/smug", type: "url", label: "SMUG", img: "https://cdn.nekos.life/smug/smug_017.gif"},
+								{url: "v2/img/smug", type: "url", label: "SMUG", img: "https://cdn.nekos.life/smug/smug_058.gif"},
 								{url: "v2/img/baka", type: "url", label: "BAKA", img: "https://cdn.nekos.life/baka/baka_019.gif"},
 								{url: "v2/img/tickle", type: "url", label: "TICKLE", img: "https://cdn.nekos.life/tickle/tickle_002.gif"},
 								{url: "v2/img/slap", type: "url", label: "SLAP", img: "https://cdn.nekos.life/slap/slap_008.gif"},
@@ -261,7 +308,7 @@ module.exports = (() => {
 						
 						Tags.sfw.forEach(tag => {
 							this.createbuttons(tag.label, tag.img, "sfw").addEventListener("click", () => {
-								this.send(nekourl + tag.url, tag.type)
+								this.send(nekourl + tag.url, tag.type, false)
 							});
 						});
 						
@@ -274,41 +321,53 @@ module.exports = (() => {
 															</div>`)
 							Tags.nsfw.forEach(tag => {
 								this.createbuttons(tag.label, tag.img, "nsfw").addEventListener("click", () => {
-									this.send(nekourl + tag.url, tag.type)
+									this.send(nekourl + tag.url, tag.type, this.settings.spoiler)
 								});
 							});
 						}
 					})
 				}
 
-				send(requestURL, type){
+				send(requestURL, type, nsfwornot){
 					var request = new Request(requestURL);
 					fetch(request).then(function(response) {
-						return response.text();
-					}).then(function(text) {
-						var obj = JSON.parse(text);                
+						return response.json();
+					}).then(function(obj) {
 						let channelID = BdApi.findModuleByProps("getLastSelectedChannelId").getChannelId();
-						let MessageQueue = BdApi.findModuleByProps('enqueue');
-						let MessageParser = BdApi.findModuleByProps('createBotMessage');
-						let msg = MessageParser.createBotMessage(channelID, '');
-						let content = ''
-						if(type == 'neko') content = obj.neko;
-						if(type == 'url') content = obj.url;
-						// Send the message
-						MessageQueue.enqueue({
-							type: 0,
-							message: {
-								channelId: channelID,
-								content: content,
-								tts: false,
-								nonce: msg.id,
-								}
-							}, r => {
-								return;
-							});
+						let filename = obj.url.split("/")
+						filename = filename[filename.length - 1]
+						let extension = filename.split(".")
+						let url = ''
+						if(type == 'neko') url = obj.neko;
+						if(type == 'url') url = obj.url;
+						downloadImage(url, os.tmpdir() + "/" + filename).then(() => {
+							try{
+								fs.readFile("D:\\Temp\\smug_002.gif", function (err, data){
+									if(err) throw err;
+									let blob = data.toString("base64")
+									
+									BdApi.findModuleByProps("upload", "instantBatchUpload").upload({
+										channelId: channelID,
+										file: dataURLtoFile("data:image/" + extension[extension.length - 1] + ";base64," + blob, filename),
+										draftType: 0,
+										message: {
+											"channelId": channelID,
+											"content": "",
+											"tts": false,
+											"invalidEmojis": [],
+											"validNonShortcutEmojis": []
+										},
+										hasSpoiler: nsfwornot,
+										filename: filename,
+									  })
+								})
+							}catch(e){
+								console.log(e)
+							}
+						})
 						});
 					}
-
+					
 				observer(e) {
 					if (!e.addedNodes.length || !e.addedNodes[0] || !e.addedNodes[0].querySelector) return;
 					const form = e.addedNodes[0].querySelector(DiscordSelectors.Textarea.inner);
