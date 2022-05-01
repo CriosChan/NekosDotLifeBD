@@ -51,7 +51,7 @@ module.exports = (() => {
 				discord_id:"328191996579545088",
 				github_username:"CriosChan",
 			}],
-			version:"2.0.2",
+			version:"2.0.3",
 			description:"A plugin allowing to send any photo from nekos.life in two clicks",
 			github:"https://github.com/CriosChan/NekosDotLifeBD",
 			github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
