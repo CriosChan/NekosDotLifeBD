@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.5
+ * @version 2.0.6
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
@@ -22,24 +22,27 @@ return new Promise((resolve, reject) => {
 			res.pipe(fs.createWriteStream(filepath))
 				.on('error', reject)
 				.once('close', () => resolve(filepath));
-			console.log(res)
+			log(res, "log")
 		} else {
-			// Consume response data to free up memory
 			res.resume();
-			reject(new Error(`Request Failed With a Status Code: ${res.statusCode}`));
-
+			log(res, "err")
 		}
 	});
 });
 }
 
-function dataURLtoFile(dataurl, filename) {
-var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-	bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-while(n--){
-	u8arr[n] = bstr.charCodeAt(n);
+function log(text, type){
+	if(type == "log") console.log("[NEKOSDOTLIFE] [LOG]", text)
+	if(type == "err") console.error("[NEKOSDOTLIFE] [ERROR]", text)
 }
-return new File([u8arr], filename, {type:mime});
+
+function dataURLtoFile(dataurl, filename) {
+	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+		bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+	while(n--){
+		u8arr[n] = bstr.charCodeAt(n);
+	}
+	return new File([u8arr], filename, {type:mime});
 }
 
 module.exports = (() => {
@@ -52,7 +55,7 @@ const config = {
 			discord_id:"328191996579545088",
 			github_username:"CriosChan",
 		}],
-		version:"2.0.5",
+		version:"2.0.6",
 		description:"A plugin allowing to send any photo from nekos.life in two clicks",
 		github:"https://github.com/CriosChan/NekosDotLifeBD",
 		github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
@@ -77,19 +80,11 @@ const config = {
 	changelog: [
 		{
 			title: "NSFW",
-			type: "progress",
+			type: "fixed",
 			items: [
-				"I completely changed my api for the NSFW part. ⚠️ Some images may not upload.",
+				"Deletion of all NSFW that do not work or crash discord. Waiting for a fix.",
 			]
-		},
-		{
-			title: "SFW",
-			type: "improved",
-			items: [
-				"Latest version of the Nekos.Life SFW API.",
-			]
-			
-		},
+		}
 	],
 	main: "index.js"
 };
@@ -130,7 +125,6 @@ return !global.ZeresPluginLibrary ? class {
 		</button>
 	</div>`;
 
-		let opened = false;
 		let nekourl = "https://api.nekos.dev/api/"
 
 		const {DiscordSelectors, PluginUtilities, DOMTools, DiscordModules: { UserStore: { getCurrentUser } }} = Api;
@@ -168,8 +162,6 @@ return !global.ZeresPluginLibrary ? class {
 			{
 				const form = document.querySelector("form");
 				if (form) this.addButton();
-				/*if(this.settings.nsfwswitch != undefined)
-						this.settings = this.defaultSettings*/
 			}
 
 			term()
@@ -236,7 +228,6 @@ return !global.ZeresPluginLibrary ? class {
 					document.getElementById("closebutton").append(closebutton)
 					closebutton.addEventListener("click", () => {
 						document.getElementById("nekossendpanel").remove()
-						opened = false
 					})
 					let nsfw = "https://hmtai.herokuapp.com/v2/"
 					let Tags = {
@@ -275,19 +266,18 @@ return !global.ZeresPluginLibrary ? class {
 								{url: "yuri", label: "YURI", img: "https://konachan.com/image/ace02093fba803cd4021b295f69d8777/Konachan.com%20-%20303867%202girls%20black_hair%20blue_eyes%20blush%20bow%20bra%20breasts%20censored%20nipples%20pantyhose%20purple_eyes%20purple_hair%20pussy%20tshangen131%20underwear%20waifu2x%20wet%20yuri.png"},
 								{url: "pantsu", label: "PANTSU", img: "https://cdn.discordapp.com/attachments/770948564947304448/770989069110607912/Hentai_nation_2.jpg"},
 								{url: "glasses", label: "GLASSES", img: "https://media.discordapp.net/attachments/556959468252954634/638471226087440393/image0.jpg"},
-								{url: "cuckold", label: "CUCKOLD", img: "https://konachan.com/sample/2009598d749a5a111e61d5c65e3c757c/Konachan.com%20-%20317279%20sample.jpg"},
+								//{url: "cuckold", label: "CUCKOLD", img: "https://konachan.com/sample/2009598d749a5a111e61d5c65e3c757c/Konachan.com%20-%20317279%20sample.jpg"},
 								{url: "blowjob", label: "BLOWJOB", img: "https://cdn.discordapp.com/attachments/797651567121137664/797652579491381288/kartinka.jpg"},
 								{url: "boobjob", label: "BOOBJOB", img: "https://cdn.discordapp.com/attachments/797652668977250324/797653787652653076/kartinka.jpg"},
-								{url: "foot", label: "FOOT", img: "https://cdn.discordapp.com/attachments/770948564947304448/771373796937695282/03eb6382-5be5-448e-b078-39baddb872d8.png"},
 								{url: "thighs", label: "THIGHS", img: "https://media.discordapp.net/attachments/562434823222722560/732490108556673104/image0.jpg"},
-								{url: "vagina", label: "VAGINA", img: "https://cdn.discordapp.com/attachments/797717947945713696/797718018037645332/kartinka.png"},
+								//{url: "vagina", label: "VAGINA", img: "https://cdn.discordapp.com/attachments/797717947945713696/797718018037645332/kartinka.png"},
 								{url: "ahegao", label: "AHEGAO", img: "https://cdn.discordapp.com/attachments/798594181768675408/798642252921831484/kartinka.jpg"},
 								{url: "uniform", label: "UNIFORM", img: "https://media.discordapp.net/attachments/527960044566740992/753708813609205760/Character_Konori_Mii_Tsuchimikado_MotoharuArtist_Mimura_Kaoru174A1236Dd1A71C82513C0C36B19Cca0.jpg"},
 								{url: "gangbang", label: "GANGBANG", img: "https://cdn.discordapp.com/attachments/770948564947304448/770988869780635688/3cfbdf1c-d533-4ba9-ab3d-ca49d2ac0b0a.gif"},
 								{url: "tentacles", label: "TENTACLES", img: "https://media.discordapp.net/attachments/531827778664923137/745758789713657936/16691138.webp"},
 								{url: "gif", label: "GIF", img: "https://media.discordapp.net/attachments/531827568966631425/581689350186860556/MMfgQRb.gif"},
 								{url: "nsfwNeko", label: "NSFW NEKO", img: "https://media.discordapp.net/attachments/476921568291848205/633437591756210206/image-2.png"},
-								{url: "nsfwMobileWallpaper", label: "NSFW MOBILE WALLPAPER", img: "https://cdn.discordapp.com/attachments/770948564947304448/771035043568156682/ZNo3wUfy0i8.jpg"},
+								//{url: "nsfwMobileWallpaper", label: "NSFW MOBILE WALLPAPER", img: "https://cdn.discordapp.com/attachments/770948564947304448/771035043568156682/ZNo3wUfy0i8.jpg"},
 								{url: "zettaiRyouiki", label: "ZETTAI RYOUIKI", img: "https://konachan.com/image/ddcc4b7734345d2de572ceb8661300a1/Konachan.com%20-%20316653%20aqua_eyes%20blush%20couch%20navel%20original%20skirt%20soyubee%20thighhighs%20wink%20zettai_ryouiki.jpg"},
 
 							]
@@ -318,20 +308,23 @@ return !global.ZeresPluginLibrary ? class {
 			send(requestURL, spoiler, nsfwornot){
 				request(requestURL, {json: true}, (error, res, body) => {
 					if (error) {
-						return  console.log(error)
+						return log(error, "err")
 					};
 					if (!error && res.statusCode == 200) {
 						let channelID = BdApi.findModuleByProps("getLastSelectedChannelId").getChannelId();
 						let url = ''
 						if(nsfwornot == true) url = body.url;
 						if(nsfwornot == false) url = res.body.data.response.url;
-						console.log(url)
+						log(url, "log")
 						let filename = url.split("/")
 						filename = filename[filename.length - 1]
+
+						let path =  os.tmpdir() + "\\" + filename
+
 						let extension = filename.split(".")
-						downloadImage(url, os.tmpdir() + "/" + filename).then(() => {
+						downloadImage(url, path).then(() => {
 							try{
-								fs.readFile(os.tmpdir() + "\\" + filename, function (err, data){
+								fs.readFile(path, function (err, data){
 									if(err) throw err;
 									let blob = data.toString("base64")
 									
@@ -351,14 +344,17 @@ return !global.ZeresPluginLibrary ? class {
 									})
 								})
 							}catch(e){
-								console.log(e)
+								log(e, "err")
 							}
-							}).then(() => {
-								fs.unlink(os.tmpdir() + "/" + filename, function (err){
-									if (err) throw err;
-									console.log("File Deleted!")
-								})
-							})
+
+						}).then(() => {
+							try {
+								fs.unlinkSync(path);
+								log("File removed : " + path, "log");
+							} catch (err) {
+								log(err, "err");
+							}
+						})
 					};
 				})
 				}
