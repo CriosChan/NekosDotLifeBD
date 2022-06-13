@@ -1,5 +1,5 @@
 # NekosDotLifeBD
-A plugin allowing to send any photo from nekos.life in two click
+A BetterDiscord plugin allowing to send any photo from nekos.life in two click
 
 # IMPORTANT
 ```diff
