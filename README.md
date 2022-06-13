@@ -4,6 +4,9 @@ A plugin allowing to send any photo from nekos.life in two click
 # Preview
 ![SC2 Video](previews/preview1.gif)
 
+## Preview NSFW Spoiler
+![SC2 Video](previews/preview2.gif)
+
 # Download
 Download <a href="https://github.com/CriosChan/NekosDotLifeBD/releases/download/V2.0.6/NekosDotLife.plugin.js">NekosDotLife</a> plugin and <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js">ZeresPluginLibrary</a>
 
