@@ -1,6 +1,11 @@
 # NekosDotLifeBD
 A plugin allowing to send any photo from nekos.life in two click
 
+# IMPORTANT
+```diff
+- After the recent problems that NekosDotLife had with NSFW, I decided to change the API for the latter, so I now use hmtai
+```
+
 # Preview
 ![SC2 Video](previews/preview1.gif)
 
