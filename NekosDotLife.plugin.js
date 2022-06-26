@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.6
+ * @version 2.0.7
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
@@ -55,7 +55,7 @@ const config = {
 			discord_id:"328191996579545088",
 			github_username:"CriosChan",
 		}],
-		version:"2.0.6",
+		version:"2.0.7",
 		description:"A plugin allowing to send any photo from nekos.life in two clicks",
 		github:"https://github.com/CriosChan/NekosDotLifeBD",
 		github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
@@ -75,16 +75,30 @@ const config = {
 			note: "Allows to send NSFW images as spoiler instead of normal.",
 			id: "spoiler",
 			value: false
-		}
+		},
+        {
+            type: "switch",
+            name: "Quit after sending?",
+            note: "Will make the interface close each time you send an image.",
+            id: "quit_after_send",
+            value: false
+        }
 	],
 	changelog: [
 		{
-			title: "NSFW",
-			type: "fixed",
-			items: [
-				"Deletion of all NSFW that do not work or crash discord. Waiting for a fix.",
-			]
-		}
+            title: "New way to leave the interface",
+            type: "added",
+            items: [
+                "Just click next to the interface to leave it.",
+            ]
+        },
+        {
+           title: "Do you want the interface to close after sending?",
+           type: "added",
+           items: [
+               "It's possible now, you just have to activate it in the plugin settings and the interface will close automatically after sending an image!",
+           ]
+       }
 	],
 	main: "index.js"
 };
@@ -195,7 +209,7 @@ return !global.ZeresPluginLibrary ? class {
 				button.addEventListener("click", () => {
 					const html = `<div class="layerContainer-2v_Sit" id="nekossendpanel">
 								<div class="layer-1Ixpg3">
-								<div class="backdrop-2ByYRN withLayer-2VVmpp" style="opacity: 0.85; background: hsl(0, calc(var(--saturation-factor, 1) * 0%), 0%);"></div>
+								<div class="backdrop-2ByYRN withLayer-2VVmpp" style="opacity: 0.85; background: hsl(0, calc(var(--saturation-factor, 1) * 0%), 0%);" id="nekosdotlife_backdrop"></div>
 									<div class="focusLock-2tveLW" role="dialog" aria-labelledby="uid_714" tabindex="-1" aria-modal="true">
 										<div class="root-g14mjS small-23Atuv fullscreenOnMobile-ixj0e3" style="opacity: 1; transform: scale(1); width: 720px;">
 											<div class="flex-2S1XBF flex-3BkGQD horizontal-112GEH horizontal-1Piu5- flex-3BkGQD directionRow-2Iu2A9 justifyStart-2Mwniq alignCenter-14kD11 noWrap-hBpHBz header-1zd7se" id="uid_714" style="flex: 0 0 auto;">
@@ -229,6 +243,11 @@ return !global.ZeresPluginLibrary ? class {
 					closebutton.addEventListener("click", () => {
 						document.getElementById("nekossendpanel").remove()
 					})
+
+					document.getElementById("nekosdotlife_backdrop").addEventListener("click", () => {
+                        document.getElementById("nekossendpanel").remove()
+                     })
+
 					let nsfw = "https://hmtai.herokuapp.com/v2/"
 					let Tags = {
 							sfw: [
@@ -357,7 +376,10 @@ return !global.ZeresPluginLibrary ? class {
 						})
 					};
 				})
-				}
+				if(this.settings.quit_after_send){
+                    document.getElementById("nekossendpanel").remove()
+                }
+			}
 				
 			observer(e) {
 				if (!e.addedNodes.length || !e.addedNodes[0] || !e.addedNodes[0].querySelector) return;
