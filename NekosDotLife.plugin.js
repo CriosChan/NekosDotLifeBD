@@ -86,7 +86,7 @@ const config = {
 	],
 	changelog: [
 		{
-			title: "What has been What's new??",
+			title: "What's new?",
             type: "added",
             items: [
                 "There is now a preview of the image before sending. You can disable this option in the plugin settings.",
