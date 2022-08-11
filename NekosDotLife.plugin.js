@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.8
+ * @version 2.0.9
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
@@ -48,7 +48,7 @@ const config = {
 			discord_id:"328191996579545088",
 			github_username:"CriosChan",
 		}],
-		version:"2.0.8",
+		version:"2.0.9",
 		description:"A plugin allowing to send any photo from nekos.life in two clicks",
 		github:"https://github.com/CriosChan/NekosDotLifeBD",
 		github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
@@ -71,6 +71,13 @@ const config = {
 		},
         {
             type: "switch",
+            name: "See the image before sending it",
+            note: "Just before sending the image the plugin lets you see it and choose whether you want to send it, search for another image of the same type, or cancel the sending.",
+            id: "preview",
+            value: true
+        },
+        {
+            type: "switch",
             name: "Quit after sending?",
             note: "Will make the interface close each time you send an image.",
             id: "quit_after_send",
@@ -78,6 +85,13 @@ const config = {
         }
 	],
 	changelog: [
+		{
+			title: "What has been What's new??",
+            type: "added",
+            items: [
+                "There is now a preview of the image before sending. You can disable this option in the plugin settings.",
+            ]
+		},
 		{
             title: "What has been improved?",
             type: "improved",
@@ -171,6 +185,9 @@ return !global.ZeresPluginLibrary ? class {
 				if(document.getElementById("nekossendpanel") != null){
 					document.getElementById("nekossendpanel").remove()
 				}
+				if(document.getElementById("nekospreviewpanel") != null){
+					document.getElementById("nekospreviewpanel").remove()
+				}
 				PluginUtilities.removeStyle(this.getName());
 			}
 
@@ -200,25 +217,22 @@ return !global.ZeresPluginLibrary ? class {
 										<div class="root-g14mjS small-23Atuv fullscreenOnMobile-ixj0e3" style="opacity: 1; transform: scale(1); width: 720px;">
 											<div class="flex-2S1XBF flex-3BkGQD horizontal-112GEH horizontal-1Piu5- flex-3BkGQD directionRow-2Iu2A9 justifyStart-2Mwniq alignCenter-14kD11 noWrap-hBpHBz header-1zd7se" id="uid_714" style="flex: 0 0 auto;">
 												<h2 class="wrapper-1HSdhi fontDisplay-3Gtuks base-21yXnu size20-9iTTnl" style="color:white;font-size:24px">NekosDotLife </h2>
-												<img src="https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/logo.png" style="width: 40px; height: 40px"/>
+												<img src="https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/logo.png" style="width: 40px; height: 40px; padding-left: 10px"/>
 											</div>
 											<div class="content-2hZxGK content-26qlhD thin-31rlnD scrollerBase-_bVAAt" dir="ltr" style="overflow: hidden scroll; padding-right: 8px;">
 												<div class="markdown-19oyJN">
 													<div class="paragraph-9M861H" id='NekosButtons'>
-														<div class="flex-2S1XBF flex-3BkGQD horizontal-112GEH horizontal-1Piu5- flex-3BkGQD directionRow-2Iu2A9 justifyStart-2Mwniq alignCenter-14kD11 noWrap-hBpHBz header-1zd7se" id="uid_714" style="flex: 0 0 auto;">
-															<h2 class="wrapper-1HSdhi fontDisplay-3Gtuks base-21yXnu size20-9iTTnl" style="padding-right:10px;color:white;font-size:18px">SFW</h2>
-															<div id="sfw">
-															
-															</div>
-														</div>
+															<details open><summary>SFW :</summary><div id="sfw" class="plugin-inputs collapsible" style="display: grid; height: 100%; width: 100%; grid-template-columns: auto auto auto auto auto; grid-gap: 5px;">
+													
 													</div>
 												</div>
 												<div aria-hidden="true" style="position: absolute; pointer-events: none; min-height: 0px; min-width: 1px; flex: 0 0 auto; height: 20px;"></div>
 											</div>
-											<div id="closebutton" class="flex-2S1XBF flex-3BkGQD horizontalReverse-60Katr horizontalReverse-2QssvL flex-3BkGQD directionRowReverse-HZatnx justifyStart-2Mwniq alignStretch-Uwowzr noWrap-hBpHBz footer-31IekZ" style="flex: 0 0 auto;">
+											
+										</div>
+										<div id="closebutton" class="flex-2S1XBF flex-3BkGQD horizontalReverse-60Katr horizontalReverse-2QssvL flex-3BkGQD directionRowReverse-HZatnx justifyStart-2Mwniq alignStretch-Uwowzr noWrap-hBpHBz footer-31IekZ" style="flex: 0 0 auto;">
 											
 											</div>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -295,12 +309,9 @@ return !global.ZeresPluginLibrary ? class {
 					});
 					
 					if(this.settings.nsfwswitch){
-						document.getElementById("NekosButtons").insertAdjacentHTML('beforeEnd', `<div class="flex-2S1XBF flex-3BkGQD horizontal-112GEH horizontal-1Piu5- flex-3BkGQD directionRow-2Iu2A9 justifyStart-2Mwniq alignCenter-14kD11 noWrap-hBpHBz header-1zd7se" id="uid_714" style="flex: 0 0 auto;">
-															<h2 class="wrapper-1HSdhi fontDisplay-3Gtuks base-21yXnu size20-9iTTnl" style="padding-right: 10px;color:white;font-size:18px">NSFW</h2>
-															<div id="nsfw">
-															
-															</div>
-														</div>`)
+						document.getElementById("NekosButtons").insertAdjacentHTML('beforeEnd', `
+															<details open><summary>NSFW :</summary><div id="nsfw" class="plugin-inputs collapsible" style="display: grid; height: 100%; width: 100%; grid-template-columns: auto auto auto auto auto; grid-gap: 5px; margin-top: 22px">
+															`)
 						Tags.nsfw.forEach(tag => {
 							this.createbuttons(tag.label, tag.img, "nsfw").addEventListener("click", () => {
 								this.send(nsfw + tag.url, this.settings.spoiler, true)
@@ -324,28 +335,75 @@ return !global.ZeresPluginLibrary ? class {
 						log(url, "log")
 						let filename = url.split("/")
 						filename = filename[filename.length - 1]
-						SendBlob(url, (data) => {
-							//log(data, "log")
-							BdApi.findModuleByProps("upload", "instantBatchUpload").upload({
-								channelId: channelID,
-								file: dataURLtoFile(data, filename),
-								draftType: 0,
-								message: {
-									"channelId": channelID,
-									"content": "",
-									"tts": false,
-									"invalidEmojis": [],
-									"validNonShortcutEmojis": []
-								},
-								hasSpoiler: spoiler,
-								filename: filename,
+						if(this.settings.preview){
+							const html = `<div class="layerContainer-2v_Sit" id="nekospreviewpanel">
+							<div class="layer-1Ixpg3">
+							<div class="backdrop-2ByYRN withLayer-2VVmpp" style="opacity: 0.85; background: hsl(0, calc(var(--saturation-factor, 1) * 0%), 0%);" id="nekosdotlife_backdrop"></div>
+								<div class="focusLock-2tveLW" role="dialog" aria-labelledby="uid_714" tabindex="-1" aria-modal="true">
+									<div class="root-g14mjS small-23Atuv fullscreenOnMobile-ixj0e3" style="opacity: 1; transform: scale(1); width: 720px;">
+										<div class="flex-2S1XBF flex-3BkGQD horizontal-112GEH horizontal-1Piu5- flex-3BkGQD directionRow-2Iu2A9 justifyStart-2Mwniq alignCenter-14kD11 noWrap-hBpHBz header-1zd7se" id="uid_714" style="flex: 0 0 auto;">
+											<h2 class="wrapper-1HSdhi fontDisplay-3Gtuks base-21yXnu size20-9iTTnl" style="color:white;font-size:24px">${filename}</h2>
+										</div>
+										<div class="content-2hZxGK content-26qlhD thin-31rlnD scrollerBase-_bVAAt" dir="ltr" style="overflow: hidden scroll; padding-right: 8px;">
+											<div class="markdown-19oyJN">
+												<div class="paragraph-9M861H" id='previewImage' style="height: 500px; display: flex; justify-content: center; align-items: center">
+													<img src="${url}" style="max-width: 100%; max-height: 100%"></img>
+												</div>
+											</div>
+											<div aria-hidden="true" style="position: absolute; pointer-events: none; min-height: 0px; min-width: 1px; flex: 0 0 auto; height: 20px;"></div>
+										</div>
+										<div id="ChoiceButton" class="flex-2S1XBF flex-3BkGQD horizontalReverse-60Katr horizontalReverse-2QssvL flex-3BkGQD directionRowReverse-HZatnx justifyStart-2Mwniq alignStretch-Uwowzr noWrap-hBpHBz footer-31IekZ" style="display: grid; grid-template-columns: auto auto auto; justify-content: center; grid-gap: 10px">
+										
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						`;//width: 500px; height:500px;position: relative; display:inline-block; overflow: hidden; margin:0
+							document.querySelector("#app-mount").insertAdjacentHTML('beforeEnd', html);
+							const cancel = DOMTools.createElement(`<button type="submit" class="button-f2h6uQ lookFilled-yCfaCM colorRed-rQXKgM sizeMedium-2bFIHr grow-2sR_-F"><div class="contents-3ca1mk">Cancel sending</div></button>`)
+							document.getElementById("ChoiceButton").append(cancel)
+							cancel.addEventListener("click", () => {
+								document.getElementById("nekospreviewpanel").remove()
 							})
-						})
+
+							const imageChange = DOMTools.createElement(`<button type="submit" class="button-f2h6uQ lookFilled-yCfaCM colorBrand-I6CyqQ sizeMedium-2bFIHr grow-2sR_-F"><div class="contents-3ca1mk">Find a new image of the same category</div></button>`)
+							document.getElementById("ChoiceButton").append(imageChange)
+							imageChange.addEventListener("click", () => {
+								document.getElementById("nekospreviewpanel").remove()
+								this.send(requestURL, spoiler, nsfwornot)
+							})
+
+							const send = DOMTools.createElement(`<button type="submit" class="button-f2h6uQ lookFilled-yCfaCM colorGreen-3y-Z79 sizeMedium-2bFIHr grow-2sR_-F"><div class="contents-3ca1mk">Send this image</div></button>`)
+							document.getElementById("ChoiceButton").append(send)
+							send.addEventListener("click", () => {
+								document.getElementById("nekospreviewpanel").remove()
+								SendBlob(url, (data) => {
+									//log(data, "log")
+									BdApi.findModuleByProps("upload", "instantBatchUpload").upload({
+										channelId: channelID,
+										file: dataURLtoFile(data, filename),
+										draftType: 0,
+										message: {
+											"channelId": channelID,
+											"content": "",
+											"tts": false,
+											"invalidEmojis": [],
+											"validNonShortcutEmojis": []
+										},
+										hasSpoiler: spoiler,
+										filename: filename,
+									})
+									if(this.settings.quit_after_send){
+										document.getElementById("nekossendpanel").remove()
+									}
+								})
+							})
+						}
+						
 					};
 				})
-				if(this.settings.quit_after_send){
-                    document.getElementById("nekossendpanel").remove()
-                }
 			}
 				
 			observer(e) {
