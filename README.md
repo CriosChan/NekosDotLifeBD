@@ -13,7 +13,7 @@ A BetterDiscord plugin allowing to send any photo from nekos.life in two click
 ![SC2 Video](previews/preview2.gif)
 
 # Download
-Download <a href="https://github.com/CriosChan/NekosDotLifeBD/releases/download/V2.0.7/NekosDotLife.plugin.js">NekosDotLife</a> plugin and <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js">ZeresPluginLibrary</a>
+Download <a href="https://github.com/CriosChan/NekosDotLifeBD/releases/download/V2.0.9/NekosDotLife.plugin.js">NekosDotLife</a> plugin and <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js">ZeresPluginLibrary</a>
 
 # Installation
 Installing BetterDiscord
