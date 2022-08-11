@@ -2,7 +2,7 @@
  * @name NekosDotLife
  * @author CriosChan
  * @description A plugin allowing to send any photo from nekos.life in one click
- * @version 2.0.7
+ * @version 2.0.8
  * @invite R7vuNSv
  * @authorid 328191996579545088
  * @updateUrl https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js
@@ -10,30 +10,18 @@
  * @source https://github.com/CriosChan/NekosDotLifeBD
  */
 
-const fs = require('fs');
-const client = require('https');
-const request = require('request')
-const os = require('os');
+const request = require('request').defaults({encoding: null})
 
-function downloadImage(url, filepath) {
-return new Promise((resolve, reject) => {
-	client.get(url, (res) => {
-		if (res.statusCode === 200) {
-			res.pipe(fs.createWriteStream(filepath))
-				.on('error', reject)
-				.once('close', () => resolve(filepath));
-			log(res, "log")
+function SendBlob(url, callback) {
+	request.get(url, (error, response, body) => {
+		if(!error && response.statusCode == 200){
+			data = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString('base64');
+			callback(data)
 		} else {
-			res.resume();
-			log(res, "err")
+			log(error, "err")
 		}
-	});
-});
-}
-
-function log(text, type){
-	if(type == "log") console.log("[NEKOSDOTLIFE] [LOG]", text)
-	if(type == "err") console.error("[NEKOSDOTLIFE] [ERROR]", text)
+	
+	})
 }
 
 function dataURLtoFile(dataurl, filename) {
@@ -43,6 +31,11 @@ function dataURLtoFile(dataurl, filename) {
 		u8arr[n] = bstr.charCodeAt(n);
 	}
 	return new File([u8arr], filename, {type:mime});
+}
+
+function log(text, type){
+	if(type == "log") console.log("[NEKOSDOTLIFE] [LOG]", text)
+	if(type == "err") console.error("[NEKOSDOTLIFE] [ERROR]", text)
 }
 
 module.exports = (() => {
@@ -55,7 +48,7 @@ const config = {
 			discord_id:"328191996579545088",
 			github_username:"CriosChan",
 		}],
-		version:"2.0.7",
+		version:"2.0.8",
 		description:"A plugin allowing to send any photo from nekos.life in two clicks",
 		github:"https://github.com/CriosChan/NekosDotLifeBD",
 		github_raw:"https://raw.githubusercontent.com/CriosChan/NekosDotLifeBD/main/NekosDotLife.plugin.js"
@@ -86,19 +79,12 @@ const config = {
 	],
 	changelog: [
 		{
-            title: "New way to leave the interface",
-            type: "added",
+            title: "What has been improved?",
+            type: "improved",
             items: [
-                "Just click next to the interface to leave it.",
+                "No need to download the image before sending it like I used to do.",
             ]
-        },
-        {
-           title: "Do you want the interface to close after sending?",
-           type: "added",
-           items: [
-               "It's possible now, you just have to activate it in the plugin settings and the interface will close automatically after sending an image!",
-           ]
-       }
+        }
 	],
 	main: "index.js"
 };
@@ -325,6 +311,7 @@ return !global.ZeresPluginLibrary ? class {
 			}
 
 			send(requestURL, spoiler, nsfwornot){
+				
 				request(requestURL, {json: true}, (error, res, body) => {
 					if (error) {
 						return log(error, "err")
@@ -337,42 +324,22 @@ return !global.ZeresPluginLibrary ? class {
 						log(url, "log")
 						let filename = url.split("/")
 						filename = filename[filename.length - 1]
-
-						let path =  os.tmpdir() + "\\" + filename
-
-						let extension = filename.split(".")
-						downloadImage(url, path).then(() => {
-							try{
-								fs.readFile(path, function (err, data){
-									if(err) throw err;
-									let blob = data.toString("base64")
-									
-									BdApi.findModuleByProps("upload", "instantBatchUpload").upload({
-										channelId: channelID,
-										file: dataURLtoFile("data:image/" + extension[extension.length - 1] + ";base64," + blob, filename),
-										draftType: 0,
-										message: {
-											"channelId": channelID,
-											"content": "",
-											"tts": false,
-											"invalidEmojis": [],
-											"validNonShortcutEmojis": []
-										},
-										hasSpoiler: spoiler,
-										filename: filename,
-									})
-								})
-							}catch(e){
-								log(e, "err")
-							}
-
-						}).then(() => {
-							try {
-								fs.unlinkSync(path);
-								log("File removed : " + path, "log");
-							} catch (err) {
-								log(err, "err");
-							}
+						SendBlob(url, (data) => {
+							//log(data, "log")
+							BdApi.findModuleByProps("upload", "instantBatchUpload").upload({
+								channelId: channelID,
+								file: dataURLtoFile(data, filename),
+								draftType: 0,
+								message: {
+									"channelId": channelID,
+									"content": "",
+									"tts": false,
+									"invalidEmojis": [],
+									"validNonShortcutEmojis": []
+								},
+								hasSpoiler: spoiler,
+								filename: filename,
+							})
 						})
 					};
 				})
