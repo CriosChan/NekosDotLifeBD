@@ -1,3 +1,7 @@
+```diff
+- After the recent changes in the Discord API, which broke most of the modded clients, NekosDotLife will not be updated until BetterDiscord version 2.0 is released.
+```
+
 # NekosDotLifeBD
 A BetterDiscord plugin allowing to send any photo from nekos.life in two click
 
